@@ -1,3 +1,4 @@
+
 import { IUserRoll } from './user.interface';
 
 export const userRoll: IUserRoll[] = ['seller', 'buyer'];
