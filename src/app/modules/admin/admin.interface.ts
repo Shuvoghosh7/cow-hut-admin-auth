@@ -13,4 +13,18 @@ export type IAdmin = {
   address: string;
 };
 
-export type AdminModel = Model<IAdmin, Record<string, unknown>>;
+export type AdminModel = {
+  isUserExist(
+    // eslint-disable-next-line no-unused-vars
+    phoneNumber: string
+  ): Promise<Pick<IAdmin, 'phoneNumber' | 'password' | 'role' >>;
+  isPasswordMatched(
+    // eslint-disable-next-line no-unused-vars
+    givenPassword: string,
+    // eslint-disable-next-line no-unused-vars
+    savedPassword: string
+  ): Promise<boolean>;
+} & Model<IAdmin>;
+
+
+// export type AdminModel = Model<IAdmin, Record<string, unknown>>;

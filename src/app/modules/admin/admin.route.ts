@@ -11,4 +11,5 @@ router.post(
   AdminController.createAdmin
 );
 
+
 export const AdminRoutes = router;

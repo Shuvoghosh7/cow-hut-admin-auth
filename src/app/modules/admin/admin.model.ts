@@ -4,11 +4,12 @@ import { AdminModel, IAdmin } from './admin.interface';
 import { adminRoll } from './admin.constant';
 import config from '../../../config';
 
-const adminSchema = new Schema<IAdmin>(
+const adminSchema = new Schema<IAdmin,AdminModel>(
   {
     phoneNumber: {
       type: String,
       required: true,
+      unique: true,
     },
     role: {
       type: String,
@@ -32,7 +33,7 @@ const adminSchema = new Schema<IAdmin>(
     address: {
       type: String,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,
@@ -41,6 +42,25 @@ const adminSchema = new Schema<IAdmin>(
     },
   }
 );
+
+adminSchema.statics.isUserExist = async function (
+  phoneNumber: string
+): Promise<Pick<
+  IAdmin,
+  'password' | 'role'
+> | null> {
+  return await Admin.findOne(
+    { phoneNumber},
+    { phoneNumber: 1, password: 1, role: 1 }
+  );
+};
+
+adminSchema.statics.isPasswordMatched = async function (
+  givenPassword: string,
+  savedPassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(givenPassword, savedPassword);
+};
 
 adminSchema.pre('save', async function (next) {
   // hashing user password

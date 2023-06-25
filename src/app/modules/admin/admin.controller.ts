@@ -21,5 +21,5 @@ const createAdmin: RequestHandler = catchAsync(
 
 export const AdminController = {
   createAdmin,
-
+  
 };
