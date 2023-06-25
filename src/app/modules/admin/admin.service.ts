@@ -7,7 +7,12 @@ const createAdmin = async (admin: IAdmin): Promise<IAdmin | null> => {
   return result;
 };
 
+const getAllAdmin = async () => {
+  const result = await Admin.find();
+  return result;
+};
 export const AdminService = {
   createAdmin,
+  getAllAdmin
   
 };

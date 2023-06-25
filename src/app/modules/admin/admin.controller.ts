@@ -19,7 +19,22 @@ const createAdmin: RequestHandler = catchAsync(
   }
 );
 
+const getAllAdmin: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    
+    const result = await AdminService.getAllAdmin();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Get All Admin successfully!',
+      data: result,
+    });
+  }
+);
+
 export const AdminController = {
   createAdmin,
+  getAllAdmin
   
 };

@@ -20,6 +20,7 @@ const createOrder: RequestHandler = catchAsync(
 );
 const getAllOrder: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
+    
     const result = await OrderService.getAllOrder();
 
     sendResponse(res, {
