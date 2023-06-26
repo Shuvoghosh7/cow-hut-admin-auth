@@ -51,6 +51,26 @@ const userSchema = new Schema<IUser>(
   }
 );
 
+userSchema.statics.isUserExist = async function (
+  phoneNumber: string
+): Promise<Pick<
+IUser,
+  'password' | 'role'
+> | null> {
+  return await User.findOne(
+    { phoneNumber},
+    { phoneNumber: 1, password: 1, role: 1 }
+  );
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  givenPassword: string,
+  savedPassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(givenPassword, savedPassword);
+};
+
+
 userSchema.pre('save', async function (next) {
   // hashing user password
   // eslint-disable-next-line @typescript-eslint/no-this-alias

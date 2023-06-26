@@ -21,7 +21,7 @@ const createAdmin: RequestHandler = catchAsync(
 
 const getAllAdmin: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
-    
+  
     const result = await AdminService.getAllAdmin();
 
     sendResponse(res, {

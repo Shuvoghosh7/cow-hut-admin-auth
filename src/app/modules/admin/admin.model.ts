@@ -47,11 +47,11 @@ adminSchema.statics.isUserExist = async function (
   phoneNumber: string
 ): Promise<Pick<
   IAdmin,
-  'password' | 'role'
+  'password' | 'role' | 'id'
 > | null> {
   return await Admin.findOne(
     { phoneNumber},
-    { phoneNumber: 1, password: 1, role: 1 }
+    {id:1, phoneNumber: 1, password: 1, role: 1 }
   );
 };
 
