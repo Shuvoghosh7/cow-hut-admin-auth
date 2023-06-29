@@ -12,21 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Admin = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const mongoose_1 = require("mongoose");
-const user_constant_1 = require("./user.constant");
+const admin_constant_1 = require("./admin.constant");
 const config_1 = __importDefault(require("../../../config"));
-const userSchema = new mongoose_1.Schema({
-    password: {
+const adminSchema = new mongoose_1.Schema({
+    phoneNumber: {
         type: String,
         required: true,
-        select: 0,
+        unique: true,
     },
     role: {
         type: String,
         required: true,
-        enum: user_constant_1.userRoll,
+        enum: admin_constant_1.adminRoll,
+    },
+    password: {
+        type: String,
+        required: true,
     },
     name: {
         firstName: {
@@ -38,20 +42,8 @@ const userSchema = new mongoose_1.Schema({
             required: true,
         },
     },
-    phoneNumber: {
-        type: String,
-        required: true,
-    },
     address: {
         type: String,
-        required: true,
-    },
-    budget: {
-        type: Number,
-        required: true,
-    },
-    income: {
-        type: Number,
         required: true,
     },
 }, {
@@ -60,17 +52,17 @@ const userSchema = new mongoose_1.Schema({
         virtuals: true,
     },
 });
-userSchema.statics.isUserExist = function (phoneNumber) {
+adminSchema.statics.isUserExist = function (phoneNumber) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield exports.User.findOne({ phoneNumber }, { phoneNumber: 1, password: 1, role: 1 });
+        return yield exports.Admin.findOne({ phoneNumber }, { id: 1, phoneNumber: 1, password: 1, role: 1 });
     });
 };
-userSchema.statics.isPasswordMatched = function (givenPassword, savedPassword) {
+adminSchema.statics.isPasswordMatched = function (givenPassword, savedPassword) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield bcrypt_1.default.compare(givenPassword, savedPassword);
     });
 };
-userSchema.pre('save', function (next) {
+adminSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         // hashing user password
         // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -79,4 +71,4 @@ userSchema.pre('save', function (next) {
         next();
     });
 });
-exports.User = (0, mongoose_1.model)('User', userSchema);
+exports.Admin = (0, mongoose_1.model)('Admin', adminSchema);
