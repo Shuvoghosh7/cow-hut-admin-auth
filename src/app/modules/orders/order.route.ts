@@ -6,7 +6,7 @@ import { ENUM_USER_ROLE } from '../../../enums/user';
 
 const router = express.Router();
 
-router.post('/', orderController.createOrder);
+router.post('/',auth(ENUM_USER_ROLE.BUYERS), orderController.createOrder);
 router.get('/',auth(ENUM_USER_ROLE.ADMIN), orderController.getAllOrder);
 
 export const OrderRoutes = router;
