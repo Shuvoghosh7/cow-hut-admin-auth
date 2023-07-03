@@ -2,9 +2,10 @@
 l2a3-cow-hut-backend-assignment-Shuvoghosh7 created by GitHub Classroom
 
 ## Application Routes:
+
 ## AUTH ROUTE
-* http://localhost:5000/api/v1/auth/login
-* http://localhost:5000/api/v1/auth/refresh-token
+* http://localhost:5000/api/v1/auth/login (POST)
+* http://localhost:5000/api/v1/auth/refresh-token (POST)
 
 ## ADMIN ROUTE
 * http://localhost:5000/api/v1/admins/create-admin (POST)
@@ -12,7 +13,7 @@ l2a3-cow-hut-backend-assignment-Shuvoghosh7 created by GitHub Classroom
 * http://localhost:5000/api/v1/admins/refresh-token (POST)
 
 ## USER ROUTE
-* http://localhost:5000/api/v1/auth/signup (POST)
+* http://localhost:5000/api/v1/users/signup (POST)
 
 * http://localhost:5000/api/v1/users (GET)
 
