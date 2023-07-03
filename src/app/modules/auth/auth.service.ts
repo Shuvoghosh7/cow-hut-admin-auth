@@ -1,35 +1,36 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
-import { Admin } from "../admin/admin.model";
+
 import { ILoginUser, IRefreshTokenResponse } from "./auth.interface"
 import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import config from "../../../config";
 import { Secret } from "jsonwebtoken";
+import { User } from "../user/user.model";
 
 const loginUser = async (payload: ILoginUser) => {
   const { phoneNumber,password } = payload;
-  const isUserExist = await Admin.isUserExist(phoneNumber)
+  const isUserExist = await User.isUserExist(phoneNumber)
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
   if (
     isUserExist.password &&
-    !(await Admin.isPasswordMatched(password, isUserExist.password))
+    !(await User.isPasswordMatched(password, isUserExist.password))
   ) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
   
    //create access token & refresh token
-   const { phoneNumber:phone,role,id} = isUserExist;
+   const { phoneNumber:phone,role} = isUserExist;
 
    const accessToken = jwtHelpers.createToken(
-    { phone, role,id },
+    { phone, role },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   const refreshToken = jwtHelpers.createToken(
-    { phone, role,id },
+    { phone, role},
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -53,7 +54,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
   }
   const { phone } = verifiedToken;
-  const isUserExist = await Admin.isUserExist(phone);
+  const isUserExist = await User.isUserExist(phone);
 
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
@@ -66,7 +67,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
       {
         phoneNumber: isUserExist.phoneNumber,
         role: isUserExist.role,
-        id:isUserExist.id
+        
       },
       config.jwt.secret as Secret,
       config.jwt.expires_in as string

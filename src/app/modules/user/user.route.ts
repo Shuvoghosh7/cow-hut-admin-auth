@@ -11,17 +11,6 @@ router.post(
   validateRequest(UserValidation.createUserZodSchema),
   UserController.createUser
 );
-router.post(
-  '/login',
-  validateRequest(UserValidation.loginZodSchema),
-  UserController.loginUser
-);
-
-router.post(
-  '/refresh-token',
-  validateRequest(UserValidation.refreshTokenZodSchema),
-  UserController.refreshToken
-);
 
 router.get('/:id',auth(ENUM_USER_ROLE.ADMIN), UserController.getSingleUser);
 router.patch('/:id',auth(ENUM_USER_ROLE.ADMIN), UserController.updateUser);

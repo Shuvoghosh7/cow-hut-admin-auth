@@ -12,9 +12,22 @@ router.post(
   validateRequest(AdminValidation.createAdminZodSchema),
   AdminController.createAdmin
 );
+router.post(
+  '/login',
+  validateRequest(AdminValidation.loginZodSchema),
+  AdminController.loginAdmin
+);
+
+router.post(
+  '/refresh-token',
+  validateRequest(AdminValidation.refreshTokenZodSchema),
+  AdminController.refreshToken
+);
 router.get(
   '/',auth(ENUM_USER_ROLE.ADMIN), AdminController.getAllAdmin
 );
+
+
 
 
 export const AdminRoutes = router;
