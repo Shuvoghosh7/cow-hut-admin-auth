@@ -22,32 +22,39 @@ const createOrder = (order) => __awaiter(void 0, void 0, void 0, function* () {
     const buyer = yield user_model_1.User.findById(order.buyer);
     const cow = yield cow_modal_1.Cow.findById(order.cow);
     if (!buyer) {
-        throw new Error("Buyer not found");
+        throw new Error('Buyer not found');
     }
     if (!cow) {
-        throw new Error("Cow not found");
+        throw new Error('Cow not found');
     }
     if (buyer.budget < cow.price) {
         throw new Error('Insufficient funds to buy the cow.');
     }
     const session = yield mongoose_1.default.startSession();
-    session.startTransaction();
-    yield cow_modal_1.Cow.findByIdAndUpdate(order.cow, { label: 'sold out' });
-    // Deduct the cost of the cow from the buyer's budget
-    yield user_model_1.User.findByIdAndUpdate(order.buyer, {
-        budget: buyer.budget - cow.price,
-    });
-    // Update the seller's income by adding the cost of the cow
-    const sellerId = cow.seller._id;
-    const cowPrice = cow.price;
-    yield user_model_1.User.updateOne({ _id: sellerId }, { $inc: { income: cowPrice } });
-    const result = yield order_module_1.Order.create(order);
-    yield session.commitTransaction();
-    session.endSession();
-    return result;
+    try {
+        session.startTransaction();
+        yield cow_modal_1.Cow.findByIdAndUpdate(order.cow, { label: 'sold out' });
+        // Deduct the cost of the cow from the buyer's budget
+        yield user_model_1.User.findByIdAndUpdate(order.buyer, {
+            budget: buyer.budget - cow.price,
+        });
+        // Update the seller's income by adding the cost of the cow
+        const sellerId = cow.seller._id;
+        const cowPrice = cow.price;
+        yield user_model_1.User.updateOne({ _id: sellerId }, { $inc: { income: cowPrice } });
+        const result = yield order_module_1.Order.create(order);
+        yield session.commitTransaction();
+        yield session.endSession();
+        return result;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw error;
+    }
 });
 const getAllOrder = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_module_1.Order.find().populate("cow").populate("buyer");
+    const result = yield order_module_1.Order.find().populate('cow').populate('buyer');
     return result;
 });
 exports.OrderService = {

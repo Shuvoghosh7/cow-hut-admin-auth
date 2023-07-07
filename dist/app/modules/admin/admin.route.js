@@ -12,5 +12,7 @@ const auth_1 = __importDefault(require("../../middlewares/auth"));
 const user_1 = require("../../../enums/user");
 const router = express_1.default.Router();
 router.post('/create-admin', (0, validateRequest_1.default)(admin_validation_1.AdminValidation.createAdminZodSchema), admin_controller_1.AdminController.createAdmin);
+router.post('/login', (0, validateRequest_1.default)(admin_validation_1.AdminValidation.loginZodSchema), admin_controller_1.AdminController.loginAdmin);
+router.post('/refresh-token', (0, validateRequest_1.default)(admin_validation_1.AdminValidation.refreshTokenZodSchema), admin_controller_1.AdminController.refreshToken);
 router.get('/', (0, auth_1.default)(user_1.ENUM_USER_ROLE.ADMIN), admin_controller_1.AdminController.getAllAdmin);
 exports.AdminRoutes = router;
